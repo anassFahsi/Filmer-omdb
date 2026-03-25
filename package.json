@@ -1,0 +1,29 @@
+{
+  "name": "kunskapskontroll-1-omdb",
+  "version": "1.0.0",
+  "description": "En webbapp för att söka efter filmer, serier och avsnitt via [OMDB API](https://www.omdbapi.com). Stöder filtrering på typ och årtal. Två sidor: söklista och filmdetaljer.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "vitest run --coverage && npm run test:e2e",
+    "test:e2e": "vite build && npx playwright test",
+    "lint": "eslint src/",
+    "preview": "vite preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.58.2",
+    "@vitest/coverage-v8": "^4.1.1",
+    "eslint": "^10.1.0",
+    "globals": "^17.4.0",
+    "jsdom": "^29.0.1",
+    "vite": "^8.0.2",
+    "vitest": "^4.1.1"
+  }
+}
