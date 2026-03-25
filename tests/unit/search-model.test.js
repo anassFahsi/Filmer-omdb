@@ -15,25 +15,47 @@ describe("SearchModel", () => {
     model = new SearchModel();
   });
 
-  test("getResults returns empty array by default", () => {});
+  test("getResults returns empty array by default", () => {expect(model.getResults()).toEqual([])});
 
-  test("setResults and getResults stores and returns results", () => {});
+  test("setResults and getResults stores and returns results", () => {const data=[{title:'Batman',year:2010,type:'movie'}];
+  model.setResults(data);
+  expect(model.getResults()).toEqual(data)
+});
 
-  test("getTotalResults returns 0 by default", () => {});
+  test("getTotalResults returns 0 by default", () => {expect(model.getTotalResults()).toEqual(0)});
 
-  test("setTotalResults and getTotalResults tracks count", () => {});
+  test("setTotalResults and getTotalResults tracks count", () => {model.setTotalResults(5);
+    expect(model.getTotalResults()).toBe(5)
+  });
 
-  test("getSearchQuery returns empty string by default", () => {});
+  test("getSearchQuery returns empty string by default", () => {expect(model.getSearchQuery()).toBe('')});
 
-  test("setSearchQuery and getSearchQuery tracks query", () => {});
+  test("setSearchQuery and getSearchQuery tracks query", () => {model.setSearchQuery('Batman');
+    expect(model.getSearchQuery()).toBe('Batman')
+  });
 
-  test("getTypeFilter returns empty string by default", () => {});
+  test("getTypeFilter returns empty string by default", () => {expect(model.getTypeFilter()).toBe('')});
 
-  test("setTypeFilter and getTypeFilter tracks type", () => {});
+  test("setTypeFilter and getTypeFilter tracks type", () => {model.setTypeFilter('film');
+    expect(model.getTypeFilter()).toBe('film')
+  });
 
-  test("getYear returns empty string by default", () => {});
+  test("getYear returns empty string by default", () => {expect(model.getYear()).toBe('')});
 
-  test("setYear and getYear tracks year", () => {});
+  test("setYear and getYear tracks year", () => {model.setYear('2011');
+    expect(model.getYear()).toBe('2011')
+  });
 
-  test("reset clears all state", () => {});
+  test("reset clears all state", () => {model.setResults([{title:'Batman Begins'}]);
+  model.setTotalResults(2);
+  model.setTypeFilter('film');
+  model.setSearchQuery('Batman');
+  model.setYear('2011');
+  model.reset();
+  expect(model.getResults()).toEqual([]);
+  expect(model.getSearchQuery()).toBe('');
+  expect(model.getTotalResults()).toBe(0);
+  expect(model.getTypeFilter()).toBe('');
+  expect(model.getYear()).toBe('')
+  });
 });
