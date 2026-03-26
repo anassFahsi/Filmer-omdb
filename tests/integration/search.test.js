@@ -1,4 +1,4 @@
-import { describe, test, expect, beforeEach, vi } from "vitest";
+import { describe, test, expect, beforeEach, vi, assert } from "vitest";
 
 // =========================================================
 // The beforeEach below sets up a mocked fetch and the DOM.
@@ -49,11 +49,26 @@ beforeEach(() => {
 // =========================================================
 
 describe("search results → model → view", () => {
-  test("storing results in model and rendering shows movie cards", async () => {});
+  test("storing results in model and rendering shows movie cards", async () => {const{SearchModel}=await import('../../src/search-model.js');
+const{renderMovies}=await import('../../src/search-view.js');
+const model= new SearchModel();
+model.setResults([{Title:'Batman Begins',Year:'2011',Type:'movie'},{Title:'Inception',Year:'2010',Type:'movie'}]);renderMovies(model.getResults());
+const movieList=document.getElementById('movie-list');
+expect(movieList.children.length).toBe(2);
+expect(movieList.textContent).toContain('Batman Begins');
+expect(movieList.textContent).toContain('Inception');
+});
 
-  test("renderMovies shows a placeholder message when given an empty array", async () => {});
+  test("renderMovies shows a placeholder message when given an empty array", async () => {const{renderMovies}=await import('../../src/search-view.js');
+renderMovies([]);
+const movieList=document.getElementById('movie-list');
+expect(movieList.textContent).toContain('Inga resultat hittades')});
 
-  test("showResultInfo displays the result count and search query", async () => {});
+  test("showResultInfo displays the result count and search query", async () => {const{showResultInfo}=await import('../../src/search-view.js');
+let resultInfo = document.getElementById("result-info");
+showResultInfo(3,'Batman');
+expect(resultInfo.textContent).toContain('3'); 
+expect(resultInfo.textContent).toContain('Batman');})
 });
 
 // =========================================================
@@ -74,10 +89,24 @@ describe("search results → model → view", () => {
 // =========================================================
 
 describe("searchMovies – API integration", () => {
-  test("searchMovies calls the OMDB API with correct URL parameters", async () => {});
+  test("searchMovies calls the OMDB API with correct URL parameters", async () => {const {searchMovies}=await import('../../src/api-service.js'); 
+fetch.mockResolvedValueOnce({ok:true,json:async()=>({response:true,search:[]})});
+await searchMovies('Batman','movie','2011');
+ expect(fetch).toHaveBeenCalledWith("https://www.omdbapi.com/?apikey=trilogy&s=Batman&type=movie&y=2011")})
 
-  test("searchMovies throws on network error", async () => {});
+  test("searchMovies throws on network error", async () => {
+     const { searchMovies } = await import("../../src/api-service.js");
+     fetch.mockResolvedValueOnce({ok:false});
+     await expect(searchMovies()).rejects.toThrow('Nätverksfel vid sökning')
+  });
 
   // Add your own test(s) here
+  test('SearchMovies returns parsed JSON data when API responds successfully',async()=>{
+    const {searchMovies}=await import('../../src/api-service.js');
+    const fakeData={response:'True',search:[{Title:'Batman',Type:'movie',Year:'2020'}], totalResults: "1"}
+    fetch.mockResolvedValueOnce({ok:true,json:async()=>fakeData});
+    const result=await searchMovies('Batman');
+    expect(result).toEqual(fakeData);
+  })
 });
 
